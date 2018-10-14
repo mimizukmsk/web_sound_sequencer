@@ -1,0 +1,22 @@
+{
+  "name": "static",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "mimizuk",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^4.1.3",
+    "browserify": "^16.2.3",
+    "jquery": "^3.3.1",
+    "midiconvert": "^0.4.7",
+    "popper.js": "^1.14.4",
+    "tone": "^0.12.80"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  }
+}

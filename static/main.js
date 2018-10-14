@@ -1,6 +1,10 @@
+const Tone = require('tone');
+const $ = require('jquery');
+const midic = require('midiconvert');
+
 // 使用準備
-var synth = new Tone.PolySynth().toMaster();
-var state = true; // 入力状態
+const synth = new Tone.Synth().toMaster();
+let state = true; // 入力状態
 
 // マウス、キーボードを押した際のイベント処理
 window.addEventListener('keydown', playSound);
@@ -13,7 +17,7 @@ window.addEventListener('mouseup', offSound);
 function playSound(e) {
   if (!state) return;
 
-  var key = e.keyCode || e.target.dataset.key;
+  let key = e.keyCode || e.target.dataset.key;
   div = document.querySelector('div[data-key="'+ key +'"]');
   if (div) {
     synth.triggerAttackRelease(div.textContent, '8n');

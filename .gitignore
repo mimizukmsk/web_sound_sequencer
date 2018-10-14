@@ -2,3 +2,4 @@ Include/
 Lib/
 Scripts/
 pip-selfcheck.json
+static/node_modules/
