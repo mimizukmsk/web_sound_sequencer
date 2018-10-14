@@ -17,6 +17,7 @@
     "browserify": "^16.2.3",
     "gulp": "^3.9.1",
     "midiconvert": "^0.4.7",
-    "tone": "^0.12.80"
+    "tone": "^0.12.80",
+    "vinyl-source-stream": "^2.0.0"
   }
 }
