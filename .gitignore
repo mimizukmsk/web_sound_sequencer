@@ -3,3 +3,4 @@ Lib/
 Scripts/
 pip-selfcheck.json
 static/node_modules/
+static/bundle.js

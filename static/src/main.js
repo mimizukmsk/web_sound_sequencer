@@ -1,6 +1,5 @@
-const Tone = require('tone');
-const $ = require('jquery');
-const midic = require('midiconvert');
+const Tone = require('Tone');
+require('./styles.css');
 
 // 使用準備
 const synth = new Tone.Synth().toMaster();
