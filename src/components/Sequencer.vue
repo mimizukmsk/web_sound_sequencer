@@ -1,63 +1,108 @@
 <template>
   <div>
-    <div class="grid">
-      <table class="note-list" >
-        <tr v-bind:class="note" v-for="note in scale" :key="note.id">
-          <td v-for="num in 8" :key="num.id">
-            <input type="radio" :name="num + '-note'" :id="num + '-' + note" @click="testPlay(note), check(num, note)">
-            <label :for="num + '-' + note">{{num}} - {{ note }}</label>
-          </td>
-        </tr>
-      </table>
-    </div>
+    <Grid :length="length" :scale="scaleNotesShow"></Grid>
     <div class="player">
-      <button @click="play()">Play</button>
-      <button @click="stop()">Stop</button>
+      <div class="player__button">
+        <button @click="play()">Play</button>
+        <button @click="stop()">Stop</button>
+      </div>
+      <div class="player__setting">
+        <label for="scaleName">Scale: </label>
+        <select name="scaleName" v-model="selectedScaleName" @change="setScaleNotes()">
+          <option v-for="sn in scaleNames" :value="sn" :key="sn.id">{{ sn }}</option>
+        </select>
+        <label for="length">Length: </label>
+        <select name="length" v-model="selectedLength" @change="setLength()">
+          <option v-for="len in lengthList" :value="len" :key="len.id">{{ len }}</option>
+        </select>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import Tone from 'tone';
-const scaleList = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4', 'C5'];
-const synth = new Tone.Synth().toMaster();
+import Tone from 'tone'
+import Grid from './Grid.vue'
+const synth = new Tone.Synth(
+  {
+    envelope: {
+      attack: 0.005,
+      decay: 0.1,
+      sustaion: 0.3,
+      release: 1
+    }
+  }
+).toMaster();
 
 export default {
-  name: 'Grid',
-  data () {
+  name: 'Sequencer',
+  components: {
+    Grid
+  },
+  data: function () {
     return {
-      scale: scaleList.reverse(),
-      chk_note: []
+      lengthList: [4, 8, 12, 16, 20, 24, 28, 32],
+      selectedLength: '',
+      octaveList: [1, 2, 3, 4],
+      selectedOctave: '',
+      scaleNames: ['Major', 'Minor', 'Maj-Penta', 'Min-Penta'],
+      selectedScaleName: '',
+      scaleNotes: [],
+      scaleNotesShow: [],
+      playNotes: null,
     }
   },
   methods: {
-    // Grid
-    testPlay: function(item) {
-      synth.triggerAttackRelease(item, '8n');
-    },
-    check: function(num, note) {
-      let index = num - 1
-      if (!this.chk_note[index]) {
-        this.chk_note.push(note);
-      }
-      this.chk_note.splice(index, 1, note);
-      console.log(this.chk_note)
-    },
     // Player
     play: function() {
-      Tone.Transport.stop();
+      Tone.Transport.cancel();
       let melody = new Tone.Sequence(
         function (time, note) {
-          synth.triggerAttackRelease(note, '8n', time);
+          synth.triggerAttackRelease(note, '8n');
         },
-        this.chk_note,
+        this.playNotes,
+        '8n'
       )
       .start();
       Tone.Transport.bpm.value = 150;
-      Tone.Transport.start();
+      Tone.Transport.toggle();
     },
     stop: function() {
       Tone.Transport.stop();
+    },
+
+    // scaleList
+    setScaleNotes: function() {
+      this.scaleNotes = [];
+      this.scaleNotesShow = [];
+      let notes;
+      switch (this.selectedScale) {
+        case 'Major':
+          notes = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4'];
+          break;
+        case 'Minor':
+          notes = ['C4', 'D4', 'Eb4', 'F4', 'G4', 'Ab4', 'Bb4'];
+          break;
+        case 'Maj-Penta':
+          notes = ['C4', 'D4', 'E4', 'G4', 'A4'];
+          break;
+        case 'Min-Penta':
+          notes = ['C4', 'Eb4', 'F4', 'G4', 'Bb4'];
+          break;
+        default:
+          notes = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4'];
+          break;
+      }
+      for (let i = 0; i < this.octave; i++) {
+        notes.forEach(element => {
+          this.scaleNotes.push(element);
+        });
+      }
+      this.scaleNotesShow = this.scaleNotes.reverse();
+    },
+    // length
+    setLength: function() {
+
     }
   }
 }
@@ -65,22 +110,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
-.note-list {
-  margin: 0 auto;
-  border-collapse: collapse;
-  border: 1px #aaa solid;
-}
-
-td {
-  border: 1px #aaa dashed;
-  padding: 10px;
-}
-
-.note-list input {
-  display: none;
-}
-.note-list input:checked + label {
-  background-color: #aff;
-}
 </style>
