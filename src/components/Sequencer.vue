@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Grid :length="length" :scale="scaleNotesShow"></Grid>
+    <Grid :length="selectedLength" :scale="scaleNotesShow"></Grid>
     <div class="player">
       <div class="player__button">
         <button @click="play()">Play</button>
@@ -42,9 +42,9 @@ export default {
   data: function () {
     return {
       lengthList: [4, 8, 12, 16, 20, 24, 28, 32],
-      selectedLength: '',
+      selectedLength: 0,
       octaveList: [1, 2, 3, 4],
-      selectedOctave: '',
+      selectedOctave: 1,
       scaleNames: ['Major', 'Minor', 'Maj-Penta', 'Min-Penta'],
       selectedScaleName: '',
       scaleNotes: [],
@@ -76,7 +76,7 @@ export default {
       this.scaleNotes = [];
       this.scaleNotesShow = [];
       let notes;
-      switch (this.selectedScale) {
+      switch (this.selectedScaleName) {
         case 'Major':
           notes = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4'];
           break;
@@ -93,7 +93,7 @@ export default {
           notes = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4'];
           break;
       }
-      for (let i = 0; i < this.octave; i++) {
+      for (let i = 0; i < this.selectedOctave; i++) {
         notes.forEach(element => {
           this.scaleNotes.push(element);
         });
@@ -102,7 +102,7 @@ export default {
     },
     // length
     setLength: function() {
-
+      console.log(this.selectedLength)
     }
   }
 }
