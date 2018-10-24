@@ -1,10 +1,18 @@
 <template>
   <div class="grid">
     <table class="note-list" >
-      <tr v-bind:class="note" v-for="note in scale" :key="note.id">
-        <td v-for="num in length" :key="num.id">
-          <input type="radio" :name="num + '-note'" :id="num + '-' + note" @click="testPlay(note), check(num, note)">
-          <label :for="num + '-' + note">{{num}} - {{ note }}</label>
+      <tr v-for="note in scale"
+          :class="note"
+          :key="note.id">
+        <td v-for="num in length"
+            :key="num.id">
+          <input type="radio"
+                 :name="num + '-note'"
+                 :id="num + '-' + note"
+                 @click="testPlay(note), check(num, note)">
+          <label :for="num + '-' + note">
+            {{num}} - {{ note }}
+          </label>
         </td>
       </tr>
     </table>
@@ -12,38 +20,27 @@
 </template>
 
 <script>
-import Tone from 'tone'
-const synth = new Tone.Synth(
-  {
-    envelope: {
-      attack: 0.005,
-      decay: 0.1,
-      sustaion: 0.3,
-      release: 1
-    }
-  }
-).toMaster();
+import seqConf from './config.js'
 
 export default {
+  name: 'Grid',
   props: {
     length: Number,
     scale: Array,
+    playNotes: Array
   },
+  data () {
+    return {
+    }
+  },
+  // 子から親のメソッドへ値を渡す
   methods: {
-    testPlay: function(item) {
-      synth.triggerAttackRelease(item, '8n');
+    testPlay (note) {
+      this.$emit('testPlay', note)
     },
-    check: function(num, note) {
-      let index = num - 1
-      if (!this.$parent.playNotes) {
-        this.$parent.playNotes = []
-        for (let i = 0; i < this.length; i++) {
-          this.$parent.playNotes.push(null);
-        };
-      }
-      this.$parent.playNotes.splice(index, 1, note);
-      console.log(this.$parent.playNotes)
-    },
+    check (num, note) {
+      this.$emit('check', num, note)
+    }
   }
 }
 </script>
