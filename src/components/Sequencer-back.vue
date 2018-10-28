@@ -35,11 +35,11 @@ export default {
       selectedLength: 0,
       selectedBase: 0,
       selectedOctave: 0,
-      selectedTempo: 0,
+      selectedBpm: 0,
 
-      // 処理用ノーツ / 表示用ノーツ / 再生するメロディ
-      scaleNotes: [],
-      scaleNotesShow: [],
+      // 処理用/表示用ノーツ、再生するメロディ
+      scaleNotes: ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4'],
+      scaleNotesShow: ['B4', 'A4', 'G4', 'F4', 'E4', 'D4', 'C4'],
       playNotes: [],
     }
   },
@@ -78,7 +78,7 @@ export default {
         this.playNotes,
         '8n'
       ).start();
-      Tone.Transport.bpm.value = this.selectedTempo;
+      Tone.Transport.bpm.value = 150;
       // 発音開始
       Tone.Transport.start();
     },
@@ -87,24 +87,39 @@ export default {
     },
 
     // Setting
-    setting (scale, length, base, octave, tempo) {
+    setting (scale, length, base, octave) {
       this.selectedScaleName = scale;
       this.selectedLength = length;
       this.selectedBase = base;
       this.selectedOctave = octave;
-      this.selectedTempo = tempo;
 
       this.playNotes = [];
       this.scaleNotes = [];
-
       const selectedScaleList = this.config.scales[scale];
-
+      let notes;
+      switch (this.selectedScaleName) {
+        case 'Major':
+          notes = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+          break;
+        case 'Minor':
+          notes = ['C', 'D', 'Eb', 'F', 'G', 'Ab', 'Bb'];
+          break;
+        case 'Maj-Penta':
+          notes = ['C', 'D', 'E', 'G', 'A'];
+          break;
+        case 'Min-Penta':
+          notes = ['C', 'Eb', 'F', 'G', 'Bb'];
+          break;
+        default: // Major
+          notes = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+          break;
+      }
       // 指定された基底音程から指定されたオクターブ分だけ表示
       for (let i = this.selectedBase; i < this.selectedBase + this.selectedOctave; i++) {
         if (i > 9) {
           break;
         }
-        selectedScaleList.forEach(item => {
+        notes.forEach(item => {
           this.scaleNotes.push(item + i);
         });
       }

@@ -1,5 +1,6 @@
 <template>
   <div class="player">
+    <h1>Player</h1>
     <button @click="play">Play</button>
     <button @click="stop">Stop</button>
   </div>
@@ -10,17 +11,14 @@ import seqConf from './config.js'
 
 export default {
   name: 'Player',
-  // 子から親のメソッドを呼ぶ
   methods: {
+    // 親クラスメソッド呼び出し
     play () {
-      this.$emit('play')
+      this.$emit('play');
     },
     stop () {
-      this.$emit('stop')
+      this.$emit('stop');
     }
-  },
-  beforeUpdate () {
-    
   }
 }
 </script>
